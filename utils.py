@@ -96,7 +96,7 @@ def features_to_csv(dataset, n_songs = 0, whole_dataset = False):
     for i in range(n_songs):
         artist_name = df.iloc[i][1]
         track_name = df.iloc[i][0]
-
+ 
         #search for spotify tack 
         track_results = sp.search(q=f'artist: {artist_name}, track:{track_name}', type='track', limit=10,offset=0)
         if len(track_results['tracks']['items']) > 0: #if track exists
@@ -124,20 +124,20 @@ def features_to_csv(dataset, n_songs = 0, whole_dataset = False):
         #             attempt to addd artist and trackname, but i think somehting is still wrong
                     data_dict_copy['artist'].append(artist_name)
                     data_dict_copy['trackname'].append(track_name)
+    
 
         pbar.update(1) 
         
-        # if i %50 ==0: #every 100 songs, save the dateframe to a csv
-        #     df_features = pd.DataFrame(data_dict_copy) #convert dict to df
-        #     df_features.to_csv('features_'+ dataset +'.csv', mode='a', header=False)
-        #     data_dict_copy = data_dict.copy()
-        #     #print(f'df saved at the {i}th iteration')
+        if i %100 ==0: #every 100 songs, save the dateframe to a csv
+            df_features = pd.DataFrame(data_dict_copy) #convert dict to df
+            df_features.to_csv('features_'+ dataset +'.csv')
+
 
     pbar.close()
 
 #     save df at the end
     df_features = pd.DataFrame(data_dict_copy) #convert dict to df
-    df_features.to_csv('features_'+ dataset +'.csv', mode='a', header=False)
+    df_features.to_csv('features_'+ dataset +'.csv')
     return df_features
 
     

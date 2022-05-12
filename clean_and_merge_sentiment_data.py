@@ -43,9 +43,9 @@ def clean_merge_data_to_csv(train_test_validation:str):
     df_vader_cleaned.to_csv(new_filename)
     print(f'new csv for {train_test_validation} saved')
     
-clean_merge_data_to_csv(train_test_validation = 'validation')
-# clean_merge_data_to_csv(train_test_validation = 'train')
-# clean_merge_data_to_csv(train_test_validation = 'test')
+# clean_merge_data_to_csv(train_test_validation = 'validation')
+clean_merge_data_to_csv(train_test_validation = 'train')
+clean_merge_data_to_csv(train_test_validation = 'test')
 
 
 

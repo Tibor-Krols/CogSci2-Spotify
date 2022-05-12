@@ -1,6 +1,8 @@
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
+from requests.exceptions import ConnectionError
+from time import sleep
 import re
 import string
 import os
@@ -19,21 +21,33 @@ sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
 def scrape_lyrics(artistname, songname):
     artistname2 = str(artistname.replace(' ','-')) if ' ' in artistname else str(artistname)
     songname2 = str(songname.replace(' ','-')) if ' ' in songname else str(songname)
-    page = requests.get('https://genius.com/'+ artistname2 + '-' + songname2 + '-' + 'lyrics')
-    html = BeautifulSoup(page.text, 'html.parser')
-    #print(html)
-    lyrics1 = html.find("div", class_="lyrics")
-    lyrics2 = html.find_all("div", class_="Lyrics__Container-sc-1ynbvzw-6 jYfhrf")
-    if lyrics1:
-        lyrics = lyrics1.get_text("\m")
-    elif lyrics2:
-        #print(lyrics2)
-        lyrics = ""
-        for l in lyrics2: 
-            lyrics += l.get_text("\m")
-    elif lyrics1 == lyrics2 == None:
-        lyrics = None
-    return lyrics
+    not_found = True
+    i = 0
+    while i<10 and not_found:
+        try:
+            page = requests.get('https://genius.com/'+ artistname2 + '-' + songname2 + '-' + 'lyrics')
+            html = BeautifulSoup(page.text, 'html.parser')
+            not_found = False
+            #print(html)
+            lyrics1 = html.find("div", class_="lyrics")
+            lyrics2 = html.find_all("div", class_="Lyrics__Container-sc-1ynbvzw-6 jYfhrf")
+            if lyrics1:
+                lyrics = lyrics1.get_text("\m")
+            elif lyrics2:
+                #print(lyrics2)
+                lyrics = ""
+                for l in lyrics2: 
+                    lyrics += l.get_text("\m")
+            elif lyrics1 == lyrics2 == None:
+                lyrics = None
+            return lyrics
+        except requests.ConnectionError as e:
+            sleep(10)
+            i += 1
+    return None
+
+
+
 
 #function to attach lyrics onto data frame
 #artist_name should be inserted as a string
@@ -43,7 +57,7 @@ def lyrics_onto_frame(df1, artist_name):
         df1.loc[i, 'lyrics'] = test
     return df1
 
-def features_to_csv(dataset, n_songs = 0, whole_dataset = False):
+def features_to_csv(dataset, n_songs = 0, n_start = 0, whole_dataset = False):
     """function that gets all the audio features from spotify and the lyrics from genius and saves it as a csv
     dataset: string value that is either 'train', 'test' or 'validation' to indicate which dataset to use
     n_songs = int value, depening on how many songs you want to get the track features and lyrics from
@@ -60,7 +74,7 @@ def features_to_csv(dataset, n_songs = 0, whole_dataset = False):
 #     df = pd.concat([tester['track_name'], tester['artist_name']], axis = 1, keys = ['track_name', 'artist_name'])
 
     if whole_dataset == False:
-        data = songs.head(n_songs)
+        data = songs.iloc[n_start: n_start+n_songs]
     else:
         data = songs
         n_songs = len(data)

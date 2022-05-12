@@ -14,3 +14,16 @@ if os.path.isfile('features_test.csv'):
     train = pd.read_csv('features_test.csv', delimiter=',')
 else:
     train = features_to_csv(dataset = 'test', whole_dataset = True)
+
+# 2572/3514 on spotify 
+if os.path.isfile('features_test.csv'): 
+    train = pd.read_csv('features_test.csv', delimiter=',')
+else:
+    train = features_to_csv(dataset = 'test', whole_dataset = True)
+
+# 3152/11267 on spotify 
+if os.path.isfile('features_train.csv'): 
+    train = pd.read_csv('features_train.csv', delimiter=',')
+else:
+    train = features_to_csv(dataset = 'train', whole_dataset = True)
+

@@ -50,7 +50,7 @@ class LyricsTable:
 
         index_dict = {'vader': (0, 5), 'tfidf': (5,156), 'anew': (156, 256)}
 
-        res_array = np.zeros((data.shape[0]))
+        res_array = np.zeros((data.shape[0], 2))
 
         if len(features) == 3:
             return data
@@ -60,7 +60,7 @@ class LyricsTable:
                 feature_array = data[:, index[0]:index[1]]
                 res_array = np.concatenate((res_array, feature_array), axis = 1)
 
-        return res_array[:, 1:]
+        return res_array[:, 2:]
 
     def regression_r2(self, train, test):
         regr_val = self.init_regr()

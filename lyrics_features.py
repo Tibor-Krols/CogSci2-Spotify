@@ -57,7 +57,7 @@ class LyricsTable:
         else:
             for feature in features: 
                 index = index_dict[feature]
-                feature_array = data[index[0]:index[1]]
+                feature_array = data[:, index[0]:index[1]]
                 res_array = np.concatenate((res_array, feature_array), axis = 1)
 
         return res_array[:, 1:]

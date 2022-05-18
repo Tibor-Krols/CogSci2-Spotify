@@ -65,12 +65,12 @@ class LyricsTable:
     def regression_r2(self, train, test):
         regr_val = self.init_regr()
         regr_val.fit(train, self.labels_train_v)
-        prediction_val = self.regr.predict(test)
+        prediction_val = regr_val.predict(test)
         r2_val = r2_score(self.labels_test_v, prediction_val)
 
         regr_ar = self.init_regr()
         regr_ar.fit(train, self.labels_train_ar)
-        prediction_ar = self.regr.predict(test)
+        prediction_ar = regr_ar.predict(test)
         r2_ar = r2_score(self.labels_test_ar, prediction_ar)
 
         return (r2_val, r2_ar)

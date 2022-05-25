@@ -13,24 +13,33 @@ from sklearn.neural_network import MLPRegressor
 
 class LyricsTable:
 
-    def __init__(self, regressor):
+    def __init__(self, regressor, testset):
         self.regressor = regressor
 
         self.features_train = np.loadtxt('lyrics_features_train.csv', delimiter = ',')
         self.features_test = np.loadtxt('lyrics_features_test.csv', delimiter = ',')
+        self.features_val = np.loadtxt('lyrics_features_val.csv', delimiter = ',')
         self.labels_train_v = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',')['y_valence']
         self.labels_train_a = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',')['y_arousal']
         self.labels_test_v = pd.read_csv('merged_cleaned_sentiment_test.csv', delimiter = ',')['y_valence']
         self.labels_test_a = pd.read_csv('merged_cleaned_sentiment_test.csv', delimiter = ',')['y_arousal']
+        self.labels_val_v = pd.read_csv('merged_cleaned_sentiment_val.csv', delimiter = ',')['y_valence']
+        self.labels_val_a = pd.read_csv('merged_cleaned_sentiment_val.csv', delimiter = ',')['y_arousal']
+
         self.combos = ['tfidf', 'anew', 'vader', 'tfidf+anew', 'tfidf+vader', 'anew+vader', 'tfidf+anew+vader']
         self.results = dict()
 
         for combo in self.combos:
             features_train = self.get_features(combo, self.features_train)
-            features_test = self.get_features(combo, self.features_test)
 
-            self.results[combo] = self.regression_r2(features_train, features_test)
-        
+            if testset == 'test':
+                features_test = self.get_features(combo, self.features_test)
+                self.results[combo] = self.regression_r2(features_train, features_test, self.labels_test_a, self.labels_test_v)
+
+            elif testset == 'val':
+                features_val = self.get_features(combo, self.features_val)
+                self.results[combo] = self.regression_r2(features_train, features_val, self.labels_val_a, self.labels_val_v)
+
         self.generate_table(self.results)
 
     def init_regr(self):
@@ -62,16 +71,16 @@ class LyricsTable:
 
         return res_array[:, 2:]
 
-    def regression_r2(self, train, test):
+    def regression_r2(self, train, test, lab_a, lab_v):
         regr_val = self.init_regr()
         regr_val.fit(train, self.labels_train_v)
         prediction_val = regr_val.predict(test)
-        r2_val = r2_score(self.labels_test_v, prediction_val)
+        r2_val = r2_score(self.lab_v, prediction_val)
 
         regr_ar = self.init_regr()
         regr_ar.fit(train, self.labels_train_a)
         prediction_ar = regr_ar.predict(test)
-        r2_ar = r2_score(self.labels_test_a, prediction_ar)
+        r2_ar = r2_score(self.lab_a, prediction_ar)
 
         return (r2_val, r2_ar)
 
@@ -81,8 +90,7 @@ class LyricsTable:
         for key in results.keys():
             print(f"{key}\t\t{results[key][0]}\t{results[key][1]}")
 
-
-LyricsTable(regressor = 'linreg')
+LyricsTable(regressor = 'linreg', testset= 'val')
     
 
     

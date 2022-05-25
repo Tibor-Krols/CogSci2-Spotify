@@ -23,8 +23,8 @@ class LyricsTable:
         self.labels_train_a = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',')['y_arousal']
         self.labels_test_v = pd.read_csv('merged_cleaned_sentiment_test.csv', delimiter = ',')['y_valence']
         self.labels_test_a = pd.read_csv('merged_cleaned_sentiment_test.csv', delimiter = ',')['y_arousal']
-        self.labels_val_v = pd.read_csv('merged_cleaned_sentiment_val.csv', delimiter = ',')['y_valence']
-        self.labels_val_a = pd.read_csv('merged_cleaned_sentiment_val.csv', delimiter = ',')['y_arousal']
+        self.labels_val_v = pd.read_csv('merged_cleaned_sentiment_validation.csv', delimiter = ',')['y_valence']
+        self.labels_val_a = pd.read_csv('merged_cleaned_sentiment_validation.csv', delimiter = ',')['y_arousal']
 
         self.combos = ['tfidf', 'anew', 'vader', 'tfidf+anew', 'tfidf+vader', 'anew+vader', 'tfidf+anew+vader']
         self.results = dict()
@@ -75,12 +75,12 @@ class LyricsTable:
         regr_val = self.init_regr()
         regr_val.fit(train, self.labels_train_v)
         prediction_val = regr_val.predict(test)
-        r2_val = r2_score(self.lab_v, prediction_val)
+        r2_val = r2_score(lab_v, prediction_val)
 
         regr_ar = self.init_regr()
         regr_ar.fit(train, self.labels_train_a)
         prediction_ar = regr_ar.predict(test)
-        r2_ar = r2_score(self.lab_a, prediction_ar)
+        r2_ar = r2_score(lab_a, prediction_ar)
 
         return (r2_val, r2_ar)
 

@@ -69,9 +69,9 @@ class LyricsTable:
         r2_val = r2_score(self.labels_test_v, prediction_val)
 
         regr_ar = self.init_regr()
-        regr_ar.fit(train, self.labels_train_ar)
+        regr_ar.fit(train, self.labels_train_a)
         prediction_ar = regr_ar.predict(test)
-        r2_ar = r2_score(self.labels_test_ar, prediction_ar)
+        r2_ar = r2_score(self.labels_test_a, prediction_ar)
 
         return (r2_val, r2_ar)
 
@@ -79,10 +79,10 @@ class LyricsTable:
         print(f"Model: {self.regressor}\t\t\t\t R^2")
         print("Features\t\tValence\tArousal")
         for key in results.keys():
-            print(f"{key}\t\t{results[key][0]}\{results[key][1]}")
+            print(f"{key}\t\t{results[key][0]}\t{results[key][1]}")
 
 
-
+LyricsTable(regressor = 'linreg')
     
 
     

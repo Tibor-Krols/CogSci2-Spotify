@@ -12,11 +12,10 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR 
 from sklearn.model_selection import KFold
-from sklearn.metrics import accuracy_score
 
 class LyricsTable:
 
-    def __init__(self, regressor, testset, params):
+    def __init__(self, regressor, testset = None, params = None):
         self.regressor = regressor
         self.testset = testset
         self.params = params 
@@ -32,8 +31,7 @@ class LyricsTable:
         self.labels_val_a = pd.read_csv('merged_cleaned_sentiment_validation.csv', delimiter = ',')['y_arousal']
 
     def create_table(self):
-                
-                
+            
         self.combos = ['tfidf', 'anew', 'vader', 'tfidf+anew', 'tfidf+vader', 'anew+vader', 'tfidf+anew+vader']
 
         self.results = dict()
@@ -53,7 +51,7 @@ class LyricsTable:
         
     def init_regr(self, params = None):
         if self.regressor == 'linreg':
-            return LinearRegression()
+            return LinearRegression(positive = params)
         elif self.regressor == 'rf':
             return RandomForestRegressor(n_estimators= params[0], max_depth= params[1])
         elif self.regressor == 'mlp':

@@ -23,7 +23,7 @@ class LyricsTable:
         self.features_train = (pd.read_csv('lyrics_features_train.csv', delimiter = ',').to_numpy()).astype(np.float32)
         self.features_test = (pd.read_csv('lyrics_features_test.csv', delimiter = ',').to_numpy()).astype(np.float32)
         self.features_val = (pd.read_csv('lyrics_features_val.csv', delimiter = ',').to_numpy()).astype(np.float32)
-        self.labels_train_v = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',')['y_valence']
+        self.labels_train_v = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',').dropna(axis =0)['y_valence']
         self.labels_train_a = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',')['y_arousal']
         self.labels_test_v = pd.read_csv('merged_cleaned_sentiment_test.csv', delimiter = ',')['y_valence']
         self.labels_test_a = pd.read_csv('merged_cleaned_sentiment_test.csv', delimiter = ',')['y_arousal']
@@ -98,6 +98,9 @@ class LyricsTable:
         print("Features\t\tValence\tArousal")
         for key in results.keys():
             print(f"{key}\t\t{results[key][0]}\t{results[key][1]}")
+
+l = LyricsTable(regressor='linreg', testset='val',params = [True])
+l.create_table()
 
 ### HYPERPARAMETER OPTIMIZATION: RANDOM FOREST
 

@@ -103,7 +103,7 @@ class LyricsTable:
 
 ### HYPERPARAMETER OPTIMIZATION: RANDOM FOREST
 
-params = {'max_depth':[10, 15, 20], 'n_estimators':[50,100]}
+"""params = {'max_depth':[10, 15, 20], 'n_estimators':[50,100]}
 
 for i in params['n_estimators']:
     for j in params['max_depth']:
@@ -120,7 +120,7 @@ for i in params['n_estimators']:
             r2_v, r2_a = m.regression_r2(X_train, X_test, y_train_a, y_train_v, y_test_a, y_test_v)
             r2s.append(np.array([r2_v, r2_a]))
 
-        print(f'Estimator:{i}, Depth:{j}, R2 = {np.sum(r2s, axis = 0)/5}')
+        print(f'Estimator:{i}, Depth:{j}, R2 = {np.sum(r2s, axis = 0)/5}')"""
 
 """
 Results:

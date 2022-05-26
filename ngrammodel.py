@@ -24,7 +24,7 @@ X_test = vectorizer.transform(data_lyrics_test)
 
 print('Performing PCA...')
 
-pca = IncrementalPCA(n_components = 100, batch_size = 1000)
+pca = IncrementalPCA(n_components = 80, batch_size = 500)
 pca.fit(X_train.toarray().astype(float))
 pca_lyrics_train = pca.transform(X_train.toarray().astype(float))
 pca_lyrics_test = pca.transform(X_test.toarray().astype(float))

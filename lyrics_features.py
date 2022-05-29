@@ -22,11 +22,9 @@ class LyricsTable:
         self.testset = testset
 
         self.features_train = pd.read_csv('lyrics_features_train.csv', delimiter = ',').values
-        print(self.features_train.shape)
         self.features_test = pd.read_csv('lyrics_features_test.csv', delimiter = ',').values
         self.features_val = pd.read_csv('lyrics_features_val.csv', delimiter = ',').values
-        self.labels_train_v = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',').dropna(axis = 0)['y_valence'].values
-        print(self.labels_train_v.shape)
+        self.labels_train_v = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',').dropna(axis = 0)['y_valence']
         self.labels_train_a = pd.read_csv('merged_cleaned_sentiment_train.csv', delimiter = ',').dropna(axis = 0)['y_arousal']
         self.labels_test_v = pd.read_csv('merged_cleaned_sentiment_test.csv', delimiter = ',').dropna(axis = 0)['y_valence']
         self.labels_test_a = pd.read_csv('merged_cleaned_sentiment_test.csv', delimiter = ',').dropna(axis = 0)['y_arousal']
@@ -58,7 +56,7 @@ class LyricsTable:
         elif self.regressor == 'rf':
             return RandomForestRegressor()
         elif self.regressor == 'mlp':
-            return MLPRegressor()
+            return MLPRegressor(hidden_layer_sizes=(10,10))
         elif self.regressor == 'svr':
             return SVR()
 

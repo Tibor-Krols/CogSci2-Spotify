@@ -11,8 +11,8 @@ from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR 
-from sklearn.model_selection import KFold
-from sklearn.model_selection import cross_val_score, GridSearchCV
+from sklearn.preprocessing import MinMaxScaler
+
 
 
 class LyricsTable:
@@ -56,8 +56,16 @@ class LyricsTable:
         elif self.regressor == 'rf':
             return RandomForestRegressor()
         elif self.regressor == 'mlp':
-            return MLPRegressor(hidden_layer_sizes=(10,10))
+            scaler = MinMaxScaler()
+            self.features_train = scaler.fit_transform(self.features_train)
+            self.features_val = scaler.transform(self.features_val)
+            self.features_test = scaler.transform(self.features_test)
+            return MLPRegressor()
         elif self.regressor == 'svr':
+            scaler = MinMaxScaler()
+            self.features_train = scaler.fit_transform(self.features_train)
+            self.features_val = scaler.transform(self.features_val)
+            self.features_test = scaler.transform(self.features_test)
             return SVR()
 
     def get_features(self, features, data):
@@ -67,7 +75,7 @@ class LyricsTable:
         else:
             features = [features]
 
-        index_dict = {'vader': (0, 5), 'tfidf': (5,156), 'anew': (156, 256)}
+        index_dict = {'vader': (0, 5), 'tfidf': (5,156), 'anew': (156, 356)}
 
         res_array = np.zeros((data.shape[0], 2))
 
@@ -100,7 +108,7 @@ class LyricsTable:
         for key in results.keys():
             print(f"{key}\t\t{results[key][0]}\t{results[key][1]}")
 
-l = LyricsTable(regressor='linreg', testset='val')
+l = LyricsTable(regressor='svr', testset='val')
 l.create_table()
 
     
